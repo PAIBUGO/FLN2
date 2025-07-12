@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clarão – Mini Videoclipe</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      background-color: #000;
+    }
+    #bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+      z-index: -2;
+    }
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 30%);
+      z-index: -1;
+    }
+    #lyrics {
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      padding: 0 20px;
+      animation: fadeText 1s ease-in-out;
+    }
+    @keyframes fadeText {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    #credits {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      font-size: 0.9em;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div id="overlay"></div>
+  <div id="lyrics">Toque para começar</div>
+  <div id="credits">por João Pedro para JG</div>
+  <audio id="audio" src="C.mp3" preload="auto"></audio>  <script>
+    const audio = document.getElementById('audio');
+    const bg = document.getElementById('bg');
+    const lyricsDiv = document.getElementById('lyrics');
+    const imgs = ['1.jpg', '2.jpg', '3.jpg', '4.jpg'];
+    let imgIndex = 0, lyricIndex = 0;
+
+    const lyrics = [
+      {t: 5, text: "Mas eu sou pirata e hoje eu preciso ir"},
+      {t: 15, text: "Casas e deuses, tudo que prende um coração tirano"},
+      {t: 25, text: "No céu dessa praia me encontre e me beija"},
+      {t: 35, text: "E a gente se esconde no escuro"},
+      {t: 45, text: "Eu sinto o vento trazendo algo novo"},
+      {t: 55, text: "Que ainda vai nascer"},
+      {t: 65, text: "Que seja um segundo de liberdade"},
+      {t: 75, text: "E na noite sem brilho dessa cidade"},
+      {t: 85, text: "A gente vai ser um clarão"},
+      {t: 95, text: "Põe sua mão em mim, amor"},
+      {t: 105, text: "E deixe incendiar"}
+    ];
+
+    document.body.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const cur = audio.currentTime;
+      if (lyricIndex < lyrics.length && cur >= lyrics[lyricIndex].t) {
+        lyricsDiv.textContent = lyrics[lyricIndex].text;
+        lyricsDiv.style.animation = 'none';
+        void lyricsDiv.offsetWidth; // reinicia animação
+        lyricsDiv.style.animation = 'fadeText 1s ease-in-out';
+        lyricIndex++;
+      }
+      if (cur >= imgIndex * 10) {
+        bg.style.backgroundImage = `url('${imgs[imgIndex % imgs.length]}')`;
+        imgIndex++;
+      }
+    });
+  </script></body>
+</html>
